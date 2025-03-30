@@ -45,28 +45,9 @@ public class ReportController : Controller
 
         var outputPath = Path.ChangeExtension(htmlPath, ".pdf");
 
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "node",
-                Arguments = $"render.js {htmlPath} {outputPath}",
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
+        await PdfGenerator.GeneratePdf(htmlPath, pdfPath);
 
-        process.Start();
-        await process.WaitForExitAsync();
+        return File(System.IO.File.ReadAllBytes(pdfPath), "application/pdf", "report.pdf");
 
-        if (System.IO.File.Exists(outputPath))
-        {
-            var bytes = await System.IO.File.ReadAllBytesAsync(outputPath);
-            return File(bytes, "application/pdf", "report.pdf");
-        }
-
-        return BadRequest("PDF-Generierung fehlgeschlagen");
     }
 }
