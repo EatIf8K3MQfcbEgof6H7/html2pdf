@@ -43,7 +43,7 @@ public class ReportController : Controller
         var htmlPath = Path.GetTempFileName() + ".html";
         await System.IO.File.WriteAllTextAsync(htmlPath, html);
 
-        var outputPath = Path.ChangeExtension(htmlPath, ".pdf");
+        var pdfPath = Path.ChangeExtension(htmlPath, ".pdf");
 
         await PdfGenerator.GeneratePdf(htmlPath, pdfPath);
 
